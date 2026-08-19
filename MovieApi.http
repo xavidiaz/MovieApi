@@ -1,6 +1,92 @@
 @MovieApi_HostAddress = http://localhost:5233
 
-GET {{MovieApi_HostAddress}}/weatherforecast/
+### GET all movies (tom lista första gången)
+GET {{MovieApi_HostAddress}}/api/movies
 Accept: application/json
 
 ###
+
+### POST — skapa en film
+POST {{MovieApi_HostAddress}}/api/movies
+Content-Type: application/json
+
+{
+  "title": "Arrival",
+  "genre": "Science fiction",
+  "director": "Denis Villeneuve",
+  "releaseYear": 2016,
+  "durationMinutes": 116,
+  "rating": 8.0,
+  "description": "En språkvetare försöker kommunicera med besökare från rymden."
+}
+
+###
+
+### POST — en till
+POST {{MovieApi_HostAddress}}/api/movies
+Content-Type: application/json
+
+{
+  "title": "Blade Runner 2049",
+  "genre": "Science fiction",
+  "director": "Denis Villeneuve",
+  "releaseYear": 2017,
+  "durationMinutes": 164,
+  "rating": 8.1,
+  "description": "En ny blade runner upptäcker en hemlighet som kan förändra allt."
+}
+
+###
+
+### GET by id — finns
+GET {{MovieApi_HostAddress}}/api/movies/1
+Accept: application/json
+
+###
+
+### GET by id — finns inte (404)
+GET {{MovieApi_HostAddress}}/api/movies/9999
+Accept: application/json
+
+###
+
+### PUT — uppdatera film med id 1
+PUT {{MovieApi_HostAddress}}/api/movies/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "Arrival (Director's Cut)",
+  "genre": "Science fiction",
+  "director": "Denis Villeneuve",
+  "releaseYear": 2016,
+  "durationMinutes": 120,
+  "rating": 8.5,
+  "description": "Uppdaterad beskrivning."
+}
+
+###
+
+### PUT — id mismatch (400 Bad Request)
+PUT {{MovieApi_HostAddress}}/api/movies/1
+Content-Type: application/json
+
+{
+  "id": 2,
+  "title": "Fel id i body",
+  "genre": "Test",
+  "director": "Test",
+  "releaseYear": 2000,
+  "durationMinutes": 100,
+  "rating": 5.0
+}
+
+###
+
+### DELETE — ta bort film med id 2
+DELETE {{MovieApi_HostAddress}}/api/movies/2
+
+###
+
+### DELETE — finns inte (404)
+DELETE {{MovieApi_HostAddress}}/api/movies/9999
