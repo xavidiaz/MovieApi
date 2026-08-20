@@ -14,9 +14,16 @@ public class MoviesController(MovieContext context) : ControllerBase
 
     //  GET
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies()
+    public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies(string? genre = null)
     {
-        var movies = await context.Movies.ToListAsync();
+        var query = context.Movies.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(genre))
+        {
+            query = query.Where(m => m.Genre == genre);
+        }
+
+        var movies = await query.ToListAsync();
 
         var dtos = movies.Select(m => new MovieDto(
                     m.Id,

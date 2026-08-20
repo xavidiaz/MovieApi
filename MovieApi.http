@@ -1,18 +1,17 @@
 @MovieApi_HostAddress = http://localhost:5233
 
-### GET all movies (tom lista första gången)
+### GET all — förväntat: 200 OK, [] om DB är tom
 GET {{MovieApi_HostAddress}}/api/movies
 Accept: application/json
 
 ###
-
-### POST — skapa en film
+### POST — Sci-Fi #1 — förväntat: 201 Created + Location-header
 POST {{MovieApi_HostAddress}}/api/movies
 Content-Type: application/json
 
 {
   "title": "Arrival",
-  "genre": "Science fiction",
+  "genre": "Sci-Fi",
   "director": "Denis Villeneuve",
   "releaseYear": 2016,
   "durationMinutes": 116,
@@ -21,14 +20,13 @@ Content-Type: application/json
 }
 
 ###
-
-### POST — en till
+### POST — Sci-Fi #2 — förväntat: 201 Created
 POST {{MovieApi_HostAddress}}/api/movies
 Content-Type: application/json
 
 {
   "title": "Blade Runner 2049",
-  "genre": "Science fiction",
+  "genre": "Sci-Fi",
   "director": "Denis Villeneuve",
   "releaseYear": 2017,
   "durationMinutes": 164,
@@ -37,56 +35,99 @@ Content-Type: application/json
 }
 
 ###
+### POST — Drama — förväntat: 201 Created
+POST {{MovieApi_HostAddress}}/api/movies
+Content-Type: application/json
 
-### GET by id — finns
+{
+  "title": "The Godfather",
+  "genre": "Drama",
+  "director": "Francis Ford Coppola",
+  "releaseYear": 1972,
+  "durationMinutes": 175,
+  "rating": 9.2,
+  "description": "En maffiafamiljs uppgång och fall."
+}
+
+###
+### POST — Thriller — förväntat: 201 Created
+POST {{MovieApi_HostAddress}}/api/movies
+Content-Type: application/json
+
+{
+  "title": "Se7en",
+  "genre": "Thriller",
+  "director": "David Fincher",
+  "releaseYear": 1995,
+  "durationMinutes": 127,
+  "rating": 8.6,
+  "description": "Två poliser jagar en seriemördare inspirerad av dödssynderna."
+}
+
+###
+### POST — Comedy — förväntat: 201 Created
+POST {{MovieApi_HostAddress}}/api/movies
+Content-Type: application/json
+
+{
+  "title": "The Grand Budapest Hotel",
+  "genre": "Comedy",
+  "director": "Wes Anderson",
+  "releaseYear": 2014,
+  "durationMinutes": 99,
+  "rating": 8.1,
+  "description": "En legendarisk concierge och hans lärling på ett fiktivt europeiskt hotell."
+}
+
+###
+### GET by id — finns — förväntat: 200 OK + film-objekt
 GET {{MovieApi_HostAddress}}/api/movies/1
 Accept: application/json
 
 ###
-
-### GET by id — finns inte (404)
+### GET by id — finns inte — förväntat: 404 Not Found
 GET {{MovieApi_HostAddress}}/api/movies/9999
 Accept: application/json
 
 ###
-
-### PUT — uppdatera film med id 1
-PUT {{MovieApi_HostAddress}}/api/movies/1
+### VALIDATION — tomma fält — förväntat: 400 Bad Request + ProblemDetails med errors
+POST {{MovieApi_HostAddress}}/api/movies
 Content-Type: application/json
 
 {
-  "id": 1,
-  "title": "Arrival (Director's Cut)",
-  "genre": "Science fiction",
-  "director": "Denis Villeneuve",
-  "releaseYear": 2016,
-  "durationMinutes": 120,
-  "rating": 8.5,
-  "description": "Uppdaterad beskrivning."
+  "title": "",
+  "genre": "",
+  "director": "",
+  "releaseYear": 0,
+  "durationMinutes": 0,
+  "rating": 0,
+  "description": null
 }
 
 ###
+### === Fördjupning: filter på genre ===
 
-### PUT — id mismatch (400 Bad Request)
-PUT {{MovieApi_HostAddress}}/api/movies/1
-Content-Type: application/json
-
-{
-  "id": 2,
-  "title": "Fel id i body",
-  "genre": "Test",
-  "director": "Test",
-  "releaseYear": 2000,
-  "durationMinutes": 100,
-  "rating": 5.0
-}
+### Alla filmer (ingen filter) — förväntat: 200 OK, 5 filmer
+GET {{MovieApi_HostAddress}}/api/movies
+Accept: application/json
 
 ###
-
-### DELETE — ta bort film med id 2
-DELETE {{MovieApi_HostAddress}}/api/movies/2
+### Filtrera Sci-Fi — förväntat: 200 OK, 2 filmer
+GET {{MovieApi_HostAddress}}/api/movies?genre=Sci-Fi
+Accept: application/json
 
 ###
+### Filtrera Drama — förväntat: 200 OK, 1 film
+GET {{MovieApi_HostAddress}}/api/movies?genre=Drama
+Accept: application/json
 
-### DELETE — finns inte (404)
-DELETE {{MovieApi_HostAddress}}/api/movies/9999
+###
+### Genre som inte finns — förväntat: 200 OK, tom array []
+GET {{MovieApi_HostAddress}}/api/movies?genre=Western
+Accept: application/json
+
+###
+### === OpenAPI ===
+### OpenAPI JSON-spec — förväntat: 200 OK, JSON-spec
+GET {{MovieApi_HostAddress}}/openapi/v1.json
+Accept: application/json
