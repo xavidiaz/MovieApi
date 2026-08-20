@@ -34,6 +34,46 @@ public class MoviesController(MovieContext context) : ControllerBase
     }
 
     // GET id
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<MovieDto>> GetMovieById(int id)
+    {
+        var movie = await context.Movies.FindAsync(id);
+        if (movie is null) return NotFound();
+
+        var dto = new MovieDto(
+                movie.Id, movie.Title, movie.Genre, movie.Director, movie.ReleaseYear, movie.DurationMinutes, movie.Rating, movie.Description
+                );
+
+        return Ok(dto);
+    }
 
     // POST
+    [HttpPost]
+    public async Task<ActionResult<MovieDto>> CreateMovie(CreateMovieDto input)
+    {
+        var movie = new Movie
+        {
+            Title = input.Title,
+            Genre = input.Genre,
+            Director = input.Director,
+            ReleaseYear = input.ReleaseYear,
+            DurationMinutes = input.DurationMinutes,
+            Rating = input.Rating,
+            Description = input.Description
+        };
+
+        context.Movies.Add(movie);
+        await context.SaveChangesAsync();
+
+        var dto = new MovieDto(
+                movie.Id, movie.Title, movie.Genre, movie.Director, movie.ReleaseYear, movie.DurationMinutes, movie.Rating, movie.Description
+                );
+
+        return CreatedAtAction(
+                nameof(GetMovieById),
+                new { id = movie.Id },
+        dto
+                );
+
+    }
 }
