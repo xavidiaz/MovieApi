@@ -83,4 +83,30 @@ public class MoviesController(MovieContext context) : ControllerBase
                 );
 
     }
+
+    // Sats
+    [HttpGet("stats")]
+    public async Task<ActionResult<MovieStatsDto>> GetMovieSats()
+    {
+        var movies = context.Movies;
+
+        var totalMovies = await movies.CountAsync();
+
+        if (totalMovies == 0)
+        {
+            return Ok(new MovieStatsDto(0, 0, 0, 0));
+        }
+        var averageRating = await movies.AverageAsync(m => m.Rating);
+        var averageDurationMinutes = await movies.AverageAsync(m => m.DurationMinutes);
+        var oldestReleaseYear = await movies.MinAsync(m => m.ReleaseYear);
+
+        MovieStatsDto stats = new(
+            totalMovies,
+            averageRating,
+            (int)Math.Round(averageDurationMinutes),
+            oldestReleaseYear
+        );
+
+        return Ok(stats);
+    }
 }

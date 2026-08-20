@@ -134,6 +134,9 @@ Accept: application/json
 GET {{MovieApi_HostAddress}}/api/movies?genre=Sci-Fi
 Accept: application/json
 
+### Sats
+GET {{MovieApi_HostAddress}}/api/movies/stats
+Accept: application/json
 ###
 ### === OpenAPI ===
 ### OpenAPI JSON-spec — förväntat: 200 OK, JSON-spec
