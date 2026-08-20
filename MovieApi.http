@@ -126,6 +126,14 @@ Accept: application/json
 GET {{MovieApi_HostAddress}}/api/movies?genre=Western
 Accept: application/json
 
+### Case-insensitive: sci-fi, SCI-FI, Sci-Fi ska alla ge samma svar
+GET {{MovieApi_HostAddress}}/api/movies?genre=sci-fi
+Accept: application/json
+
+### Case-insensitive: sci-fi, SCI-FI, Sci-Fi ska alla ge samma svar
+GET {{MovieApi_HostAddress}}/api/movies?genre=Sci-Fi
+Accept: application/json
+
 ###
 ### === OpenAPI ===
 ### OpenAPI JSON-spec — förväntat: 200 OK, JSON-spec

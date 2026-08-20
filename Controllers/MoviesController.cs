@@ -20,7 +20,7 @@ public class MoviesController(MovieContext context) : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(genre))
         {
-            query = query.Where(m => m.Genre == genre);
+            query = query.Where(m => m.Genre.ToLower() == genre.ToLower());
         }
 
         var movies = await query.ToListAsync();
